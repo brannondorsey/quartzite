@@ -1,0 +1,30 @@
+{
+    "name": "Quartzite Project",
+    "version": "0.1",
+    "manifest_version": 2,
+    "description": "Browser history in snapshots",
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*", "https://*/*"
+            ],
+            "js": [
+                "scripts/jquery.js",
+                "scripts/html2canvas.js",
+                "scripts/void_functions.js",
+                "scripts/helper_functions.js",
+                "scripts/content_script.js"
+            ]
+        }
+    ],
+    "permissions" : [
+        "http://*/*"
+    ],
+    "content_security_policy": "script-src 'self' http://localhost; object-src 'self' http://localhost",
+    "incognito": "split",
+    "offline_enabled": false,
+    "update_url": "http://path/to/updateInfo.xml",
+    "web_accessible_resources": [
+        "manifest.json"
+    ]
+}
