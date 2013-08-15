@@ -1,15 +1,16 @@
 //------------------GLOBALS------------------//
 
-var thingToSay = "Im working on this webpage";
 var uploadEndpoint = "http://localhost:8888/quartzite/uploadendpoint.php";
 var endpointKey = 54183;
 
 //------------------DOC READY-------------------//
 
 $("document").ready(function(){
-    console.log(thingToSay);
-    // html2canvas(document.body, options);
+    //chrome.tabs.captureVisibleTab({ format: "png"}, function(data){
+        console.log(data);
+    });
     html2canvas([document.body], {
+      //allowTaint: true,
       onrendered: function(canvas) {
             console.log("The screenshot was rendered");
             var encode64String = canvas.toDataURL();
@@ -20,12 +21,13 @@ $("document").ready(function(){
                     url: uploadEndpoint,
                     dataType: "html",
                     // jsonp: false,
-                    data: {key: endpointKey, img: encodeURIComponent(encode64String)},
+                    data: {key: endpointKey, img: encodeURIComponent(encode64String), width: window.outerWidth, height: window.outerHeight},
                     contentType: "application/x-www-form-urlencoded;charset=UTF-8",
                     success: function(data){
                         console.log("The ajax request succeeded!");
                         console.log("The result is: ");
-                        data = data.replace(/^[^(]*\(/, '').replace(/\);?$/, '');
+                        //data = data.replace(/^[^(]*\(/, '').replace(/\);?$/, '');
+
                         console.log(data);
                         //...
                     },
@@ -34,7 +36,8 @@ $("document").ready(function(){
                     }
                 });
             }
-        } 
+        },
+        //allowTaint: true 
       });
 });
 
