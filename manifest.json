@@ -10,17 +10,20 @@
             ],
             "js": [
                 "scripts/jquery.js",
-                "scripts/html2canvas.js",
-                "scripts/void_functions.js",
-                "scripts/helper_functions.js",
+                "scripts/hashchange.js",
                 "scripts/content_script.js"
             ]
         }
     ],
     "permissions" : [
         "tabs",
-        "http://*/*"
+        "http://*/*",
+        "<all_urls>"
     ],
+    "background" : {
+        "scripts" : ["scripts/jquery.js", "scripts/background.js"],
+        "persistent" : false
+    }, 
     "content_security_policy": "script-src 'self' http://localhost; object-src 'self' http://localhost",
     "incognito": "split",
     "offline_enabled": false,
