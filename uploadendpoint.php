@@ -23,7 +23,7 @@
 		   	//decode the image and save it
 		   	$base64String = str_replace('data:image/png;base64,', '', $base64String);
 		   	$image = base64_decode($base64String);
-		   	file_put_contents("history/$filename.png", $image);
+		   	file_put_contents("history/images/$filename.png", $image);
 		   	//$base64Image = base64_decode($base64String);
 		   	// $image = new SimpleImage();
 		   	// $image->loadPNG($base64Image);
@@ -34,8 +34,10 @@
 			//save the metadata in a sidecart JSON file
 			$json = new stdClass();
 			$json->url = $url;
+			$json->ip = $_SERVER['REMOTE_ADDR'];
+			if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) $json->forward_from = $_SERVER['HTTP_X_FORWARDED_FOR'];
 			$json = json_encode($json);
-			file_put_contents("history/$filename.json", $json);
+			file_put_contents("history/metadata/$filename.json", $json);
 
 		}else echo get_error("invalid POST values");
 	}
