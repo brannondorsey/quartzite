@@ -32,7 +32,7 @@
 			$json->title = $title;
 			$json->domain = $domain;
 			$json->url = $url;
-			$json->referrer = $referrer;
+			if($referrer != "") $json->referrer = $referrer;
 			$json->ip = $_SERVER['REMOTE_ADDR'];
 			if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) $json->forward_from = $_SERVER['HTTP_X_FORWARDED_FOR'];
 			$json = json_encode($json);
