@@ -8,20 +8,19 @@ chrome.runtime.onMessage.addListener(
 function(request, sender, sendResponse) {
 var responseObj = new Object();
 
-//if the request to screenshot AND the url were sent from the content_script.js...
-if(request.screenshotRequest == true &&
-	typeof request.url !== 'undefined'){
+//if the request to screenshot was sent from the content_script.js...
+if(request.screenshotRequest == true){
 
 	//take a screenshot...
 	chrome.tabs.captureVisibleTab({ format: "png"}, function(dataUrl){
 		responseObj.screenshotRequest = "Screenshot saved";
+		responseObj.title = request.title;
+		responseObj.domain = request.domain;
 		responseObj.url = request.url;
 
-		//use AJAX to send the image to the server
-		sendImageToServer(dataUrl, sendResponse, responseObj);
+		//use AJAX to send the image to the server and a response to the content script
+		sendImageToServer(dataUrl, sendResponse, request);
 
-		//send a response 
-		//sendResponse(responseObj);
 	});
 }
 return true;
@@ -31,13 +30,21 @@ return true;
 //------------------FUNCTIONS------------------//
 function sendImageToServer(encode64String, sendResponse, responseObj){
     //if the string length is greater than 50... send it to the endpoint
+    console.log("The title is " + responseObj.title);
     if(encode64String.length > 50){
         $.ajax({
             type: "POST",
             url: uploadEndpoint,
             dataType: "html",
             // jsonp: false,
-            data: {key: endpointKey, img: encodeURIComponent(encode64String), url: responseObj.url},
+            data: {
+            	key: endpointKey, 
+            	img: encodeURIComponent(encode64String), 
+            	title: responseObj.title,
+            	domain: responseObj.domain,
+            	url: responseObj.url,
+            	referrer: responseObj.referrer
+            },
             contentType: "application/x-www-form-urlencoded;charset=UTF-8",
             success: function(data){
                 // console.log("The ajax request succeeded!");

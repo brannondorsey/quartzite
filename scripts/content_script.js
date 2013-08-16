@@ -4,8 +4,13 @@
 //------------------DOC READY-------------------//
 
 $("document").ready(function(){
-    
-    chrome.runtime.sendMessage({screenshotRequest: true, url: document.URL}, function(response) {
+    chrome.runtime.sendMessage({
+        screenshotRequest: true, 
+        title: document.title,
+        url: document.URL,
+        domain: document.domain,
+        referrer: document.referrer
+        }, function(response) {
         for(var parameter in response){
             console.log(response[parameter]);
         }

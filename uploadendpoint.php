@@ -13,8 +13,9 @@
 		   	$key = $_POST['key'];
 		   	$base64String = urldecode($_POST['img']);
 		   	$url = $_POST['url'];
-		   	// $width = $_POST['width'];
-		   	// $height = $_POST['height'];
+		   	$title = $_POST['title'];
+		   	$domain = $_POST['domain'];
+		   	$referrer = $_POST['referrer'];
 
 		   	//get the timestamp for the filename
 		   	$DateTime = new DateTime();
@@ -24,16 +25,14 @@
 		   	$base64String = str_replace('data:image/png;base64,', '', $base64String);
 		   	$image = base64_decode($base64String);
 		   	file_put_contents("history/images/$filename.png", $image);
-		   	//$base64Image = base64_decode($base64String);
-		   	// $image = new SimpleImage();
-		   	// $image->loadPNG($base64Image);
-		   	// $image->cut(0, 0, $width, $height);
-		   	// $image->save("history/$filename.png");
 			echo "Image saved as " . $filename;
 
 			//save the metadata in a sidecart JSON file
 			$json = new stdClass();
+			$json->title = $title;
+			$json->domain = $domain;
 			$json->url = $url;
+			$json->referrer = $referrer;
 			$json->ip = $_SERVER['REMOTE_ADDR'];
 			if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) $json->forward_from = $_SERVER['HTTP_X_FORWARDED_FOR'];
 			$json = json_encode($json);
