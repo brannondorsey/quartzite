@@ -6,7 +6,6 @@
 	// if there POST was set...
 	if(isset($_POST) &&
 	   !empty($_POST)){
-		var_dump($_POST);
 
 		// if the required key => value pairs are present...
 		if(isset($_POST['key']) && !empty($_POST['key']) &&
