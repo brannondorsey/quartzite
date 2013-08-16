@@ -12,8 +12,11 @@
 
 ##Todo
 
-- Use MySQL Database instead of sidecart `json` files.
 - Use [Javascript Mutation Observers](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to detect ajax content changes on facebook, github, etc… and take a new screenshot whenever these changes occur.
 - Make content_script save the length of time a page has been open in the metadata
-- Clean up code
+
+##Completed
+
+- Use MySQL Database instead of sidecart `json` files.
 - Make a unique key required to upload image to server (sent through `$_POST`)
+- Clean up code

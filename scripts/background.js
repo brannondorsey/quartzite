@@ -13,13 +13,13 @@ if(request.screenshotRequest == true){
 
 	//take a screenshot...
 	chrome.tabs.captureVisibleTab({ format: "png"}, function(dataUrl){
-		responseObj.screenshotRequest = "Screenshot saved";
-		responseObj.title = request.title;
-		responseObj.domain = request.domain;
-		responseObj.url = request.url;
+		
+        delete request.screenshotRequest;
+        request.img = encodeURIComponent(dataUrl);
+        request.key = endpointKey;
 
 		//use AJAX to send the image to the server and a response to the content script
-		sendImageToServer(dataUrl, sendResponse, request);
+		sendImageToServer(sendResponse, request);
 
 	});
 }
@@ -28,36 +28,21 @@ return true;
 
 
 //------------------FUNCTIONS------------------//
-function sendImageToServer(encode64String, sendResponse, responseObj){
+function sendImageToServer(sendResponse, request){
     //if the string length is greater than 50... send it to the endpoint
-    console.log("The title is " + responseObj.title);
-    if(encode64String.length > 50){
+    console.log("The title is " + request.title);
+    if(request.img.length > 50){
         $.ajax({
             type: "POST",
             url: uploadEndpoint,
             dataType: "html",
-            // jsonp: false,
-            data: {
-            	key: endpointKey, 
-            	img: encodeURIComponent(encode64String), 
-            	title: responseObj.title,
-            	domain: responseObj.domain,
-            	url: responseObj.url,
-            	referrer: responseObj.referrer
-            },
+            data: request,
             contentType: "application/x-www-form-urlencoded;charset=UTF-8",
             success: function(data){
-                // console.log("The ajax request succeeded!");
-                // console.log("The result is: ");
-                //data = data.replace(/^[^(]*\(/, '').replace(/\);?$/, '');
-                responseObj.url = "The url is: " + responseObj.url;
-                responseObj.result = data;
-                sendResponse(responseObj);
-                //console.log(data);
-                //...
+                sendResponse({result: data});
             },
             error: function(){
-                console.log("The request failed");
+                sendResponse({result: "The request failed"});
             }
         });
 	}

@@ -1,16 +1,24 @@
 //------------------GLOBALS------------------//
-
-
-//------------------DOC READY-------------------//
-
-$("document").ready(function(){
-    chrome.runtime.sendMessage({
+var data = {
         screenshotRequest: true, 
         title: document.title,
         url: document.URL,
         domain: document.domain,
         referrer: document.referrer
-        }, function(response) {
+    };
+
+//------------------DOC READY-------------------//
+
+$("document").ready(function(){
+
+    //add contents of <meta> tags to data obj if tag exist
+    if(getPropertyFromMeta("meta[name='keywords']")) data.keywords = getPropertyFromMeta("meta[name='keywords']");
+    if(getPropertyFromMeta("meta[name='author']")) data.author = getPropertyFromMeta("meta[name='author']");
+    if(getPropertyFromMeta("meta[name='owner']")) data.owner = getPropertyFromMeta("meta[name='owner']");
+    if(getPropertyFromMeta("meta[name='description']")) data.description = getPropertyFromMeta("meta[name='description']");
+    if(getPropertyFromMeta("meta[name='copywrite']")) data.copywrite = getPropertyFromMeta("meta[name='copywrite']");
+
+    chrome.runtime.sendMessage(data, function(response) {
         for(var parameter in response){
             console.log(response[parameter]);
         }
@@ -26,3 +34,10 @@ $("document").ready(function(){
 });
 
 //--------------------FUNCTIONS------------------------//
+
+function getPropertyFromMeta(selector){
+    var element = $(selector);
+    if(element.length > 0){
+        return element.attr("content");
+    }else return false;
+}
