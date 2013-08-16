@@ -1,6 +1,5 @@
 //------------------GLOBALS------------------//
 var uploadEndpoint =  "http://localhost:8888/quartzite/uploadendpoint.php"; //"http://brannondorsey.com/hidden/quartzite/uploadendpoint.php";
-var endpointKey = 54183;
 
 
 //------------------EVENTS------------------//
@@ -16,7 +15,6 @@ if(request.screenshotRequest == true){
 		
         delete request.screenshotRequest;
         request.img = encodeURIComponent(dataUrl);
-        request.key = endpointKey;
 
 		//use AJAX to send the image to the server and a response to the content script
 		sendImageToServer(sendResponse, request);

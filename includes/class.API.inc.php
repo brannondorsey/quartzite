@@ -24,7 +24,7 @@ class API {
 	public function __construct(){
 		$this->columns_to_provide = 
 			"id, timestamp, filename, title, domain, url, referrer, ip, forward_from";
-		$this->full_text_columns = "url";
+		$this->full_text_columns = "url, description, keywords";
 	}
 
 	//Returns a valid JSON string from $_GET values. Array must be sanitized before using this function.

@@ -3,6 +3,7 @@ var endpointKey = 54183;
 var rootDirLink = "http://localhost:8888/quartzite"
 var timeLogEndpoint = rootDirLink + "/timelogendpoint.php"
 var data = {
+        key: endpointKey,
         screenshotRequest: true, 
         title: document.title,
         url: document.URL,
