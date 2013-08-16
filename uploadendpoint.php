@@ -1,5 +1,4 @@
 <?php
-	require_once 'class.SimpleImage.php';
 	header("Access-Control-Allow-Origin: *");
 	ini_set("memory_limit","1G");
 	

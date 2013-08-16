@@ -1,5 +1,5 @@
 //------------------GLOBALS------------------//
-var uploadEndpoint = "http://localhost:8888/quartzite/uploadendpoint.php";
+var uploadEndpoint =  "http://localhost:8888/quartzite/uploadendpoint.php"; //"http://brannondorsey.com/hidden/quartzite/uploadendpoint.php";
 var endpointKey = 54183;
 
 
