@@ -14,6 +14,8 @@
 
 - Use [Javascript Mutation Observers](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to detect ajax content changes on facebook, github, etc… and take a new screenshot whenever these changes occur.
 - Make content_script save the length of time a page has been open in the metadata
+- Build API to access data
+- Handle refreshes so that they don't take another screenshot and add a new metadata entry to the database
 
 ##Completed
 

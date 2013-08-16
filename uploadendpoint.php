@@ -34,7 +34,6 @@
 		   	$base64String = str_replace('data:image/png;base64,', '', $base64String);
 		   	$image = base64_decode($base64String);
 		   	file_put_contents("history/images/$filename.png", $image);
-			echo "Image saved as " . $filename;
 
 			//save the metadata in the database
 			if($post_array['referrer'] == "") unset($post_array['referrer']);
@@ -43,7 +42,7 @@
 			$post_array['filename'] = str_replace(":", "/", $filename) . ".png"; //save the filename
 			$post_array['ip'] = $_SERVER['REMOTE_ADDR']; //add the ip address
 			// var_dump($post_array);
-			if(Database::execute_from_assoc($post_array, "metadata")) echo "\n\rSaved metadata to database";
+			if(Database::execute_from_assoc($post_array, "metadata")) echo "Image saved as: " . $filename;
 			Database::close_connection();
 			
 		}else echo get_error("invalid POST values");

@@ -3,6 +3,7 @@
 class Database {
 
 	public static $root_dir_link = "http://localhost:8888/quartzite";
+	public static $key = 54183; //used for quartzite ONLY
 
 	protected static $user     = "root";
 	protected static $password = "root";

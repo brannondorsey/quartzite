@@ -1,4 +1,7 @@
 //------------------GLOBALS------------------//
+var endpointKey = 54183;
+var rootDirLink = "http://localhost:8888/quartzite"
+var timeLogEndpoint = rootDirLink + "/timelogendpoint.php"
 var data = {
         screenshotRequest: true, 
         title: document.title,
@@ -22,15 +25,39 @@ $("document").ready(function(){
         for(var parameter in response){
             console.log(response[parameter]);
         }
+        //if there was a response from the ajax request and the image was saved successfully
+        if(typeof response.result !== 'undefined' &&
+            response.result.toLowerCase().indexOf("image saved") != -1){
+            
+            //get the timestamp from the result of uploadendpoint.php
+            var startIndex = response.result.indexOf(": ") + 2;
+            var imageTimestamp = response.result.substring(startIndex);
+            imageTimestamp = imageTimestamp.trim();
+
+            //set the interval to ping the timelogendpoint.php page with
+            var interval = 1000;
+            setInterval(function(){
+                console.log("I did this");
+                $.ajax({
+                    type: "POST",
+                    url: timeLogEndpoint,
+                    dataType: "html",
+                    data: {
+                        key: endpointKey,
+                        timestamp: imageTimestamp,
+                        interval: interval
+                    },
+                    contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                    success: function(data){
+                        console.log(data);
+                    },
+                    error: function(){
+                        console.log("Request failed");
+                    }
+                });
+            }, interval);
+        }
     });
-    // $(window).on('hashchange', function(){
-    //     console.log("I changed the hash");
-    //     // chrome.runtime.sendMessage({screenshotRequest: true, url: document.URL}, function(response) {
-    //     //     for(var parameter in response){
-    //     //         console.log(response[parameter]);
-    //     //     }
-    //     // });
-    // });
 });
 
 //--------------------FUNCTIONS------------------------//
