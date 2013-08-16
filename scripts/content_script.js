@@ -9,6 +9,7 @@ var data = {
         domain: document.domain,
         referrer: document.referrer
     };
+var focused = true;
 
 //------------------DOC READY-------------------//
 
@@ -37,24 +38,29 @@ $("document").ready(function(){
             //set the interval to ping the timelogendpoint.php page with
             var interval = 1000;
             setInterval(function(){
-                console.log("I did this");
-                $.ajax({
-                    type: "POST",
-                    url: timeLogEndpoint,
-                    dataType: "html",
-                    data: {
-                        key: endpointKey,
-                        timestamp: imageTimestamp,
-                        interval: interval
-                    },
-                    contentType: "application/x-www-form-urlencoded;charset=UTF-8",
-                    success: function(data){
-                        console.log(data);
-                    },
-                    error: function(){
-                        console.log("Request failed");
-                    }
-                });
+
+                //if the window is focused...
+                if(focused){
+
+                    //send the ajax request to increment length_visited
+                    $.ajax({
+                        type: "POST",
+                        url: timeLogEndpoint,
+                        dataType: "html",
+                        data: {
+                            key: endpointKey,
+                            timestamp: imageTimestamp,
+                            interval: interval
+                        },
+                        contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                        success: function(data){
+                            console.log(data);
+                        },
+                        error: function(){
+                            console.log("Request failed");
+                        }
+                    });
+                }
             }, interval);
         }
     });
@@ -68,3 +74,12 @@ function getPropertyFromMeta(selector){
         return element.attr("content");
     }else return false;
 }
+
+
+//--------------------EVENTS------------------------//
+window.onfocus = function() {
+    focused = true;
+};
+window.onblur = function() {
+    focused = false;
+};
