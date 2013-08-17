@@ -1,3 +1,4 @@
-mail.gmail.com
+mail.google.com
 bankofamerica.com
 paypal.com
+localhost

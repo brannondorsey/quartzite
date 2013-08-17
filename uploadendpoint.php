@@ -40,7 +40,7 @@
 			if($post_array['referrer'] == "") unset($post_array['referrer']);
 			if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) $post_array['forward_from'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
 			$post_array['timestamp'] = $filename; //save the timestamp
-			$post_array['filename'] = str_replace(":", "/", $filename) . ".png"; //save the filename
+			$post_array['filename'] = urlencode($filename) . ".png"; //save the filename
 			$post_array['ip'] = $_SERVER['REMOTE_ADDR']; //add the ip address
 			// var_dump($post_array);
 			if(Database::execute_from_assoc($post_array, "metadata")) echo "Image saved as: " . $filename;

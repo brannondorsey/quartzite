@@ -1,7 +1,5 @@
 <?php
 require_once("class.Database.inc.php");
-require_once("class.InsertUpdate.inc.php");
-require_once("class.RelationalAlgorithm.inc.php");
 
 class API {
 
@@ -23,7 +21,7 @@ class API {
 	
 	public function __construct(){
 		$this->columns_to_provide = 
-			"id, timestamp, filename, title, domain, url, referrer, ip, forward_from";
+			"id, timestamp, filename, title, domain, url, referrer, ip, forward_from, author, owner, description, keywords, copywrite";
 		$this->full_text_columns = "url, description, keywords";
 	}
 
@@ -31,10 +29,6 @@ class API {
 	public function get_JSON_from_GET(&$get_array, $object_parent_name="data"){
 		$query = $this->form_query($get_array);
 		if($this->check_API_key()){
-			if(isset($get_array['related_to']) && !empty($get_array['related_to'])){
-				$rel = new RelationalAlgorithm();
-				return $rel->get_related_users((int) $get_array['related_to']);
-			}
 			$this->JSON_string = $this->query_results_as_array_of_JSON_objs($query, $object_parent_name, true);
 			//only attempt to increment the api hit count if this method is called from a PUBLIC API request
 			if($this->API_key_required){
@@ -92,14 +86,15 @@ class API {
 			$i = 0;
 			foreach ($mysql_results_array as $user_row) {
 				$JSON_output_string .= "{";
-				$j = 0;
 				foreach($user_row as $key => $value){
-					if($key == "COUNT(*)") $key = $count_only_key;
-					$JSON_output_string .= '"' . $key . '"' . ':';
-					$JSON_output_string .= '"' . $value . '"';
-					if ($j != sizeof($user_row) -1) $JSON_output_string .= ',';
-					$j++;
+					if($value != ""){
+						if($key == "COUNT(*)") $key = $count_only_key;
+						$JSON_output_string .= '"' . $key . '"' . ':';
+						$JSON_output_string .= '"' . $value . '"';
+						$JSON_output_string .= ',';
+					}
 				}
+				$JSON_output_string = trim($JSON_output_string, ",");
 				$JSON_output_string .= "}";
 				if ($i != sizeof($mysql_results_array) -1) $JSON_output_string .= ',';
 				$i++;

@@ -1,0 +1,18 @@
+body{
+	width: 960px;
+	margin: auto;
+}
+
+.image-container{
+	margin: 20px 0px;
+}
+
+.image-container a{
+	text-decoration: none;
+}
+
+img{
+	max-height: 200px;
+	border: 1px solid black;
+	margin: 5px;
+}
