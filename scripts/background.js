@@ -5,7 +5,6 @@ var uploadEndpoint =  "http://localhost:8888/quartzite/uploadendpoint.php"; //"h
 //------------------EVENTS------------------//
 chrome.runtime.onMessage.addListener(
 function(request, sender, sendResponse) {
-var responseObj = new Object();
 
 //if the request to screenshot was sent from the content_script.js...
 if(request.screenshotRequest == true){
@@ -32,7 +31,7 @@ function sendImageToServer(sendResponse, request){
     if(request.img.length > 50){
         $.ajax({
             type: "POST",
-            url: uploadEndpoint,
+            url: request.uploadEndpointUrl,
             dataType: "html",
             data: request,
             contentType: "application/x-www-form-urlencoded;charset=UTF-8",

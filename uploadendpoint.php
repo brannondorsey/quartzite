@@ -10,7 +10,7 @@
 		// if the required key => value pairs are present...
 		if(isset($_POST['key']) && !empty($_POST['key']) &&
 		   isset($_POST['img']) && !empty($_POST['img']) &&
-		   $_POST['key'] == 54183){
+		   $_POST['key'] == Database::$key){
 
 		   	//open connection
 		   	Database::init_connection();
@@ -19,6 +19,7 @@
 
 			unset($_POST['key']); //remove the key
 			unset($_POST['img']); //remove the image
+			unset($_POST['uploadEndpointUrl']); //remove the url to this page
 		    $post_array = Database::clean($_POST);
 		   	
 		   	$url = $_POST['url'];

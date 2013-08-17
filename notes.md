@@ -22,3 +22,4 @@
 - Use MySQL Database instead of sidecart `json` files.
 - Make a unique key required to upload image to server (sent through `$_POST`)
 - Clean up code
+- Add `blocked_domains.txt` page so that domains can be blacklisted. Use same newline style as .gitignore.
