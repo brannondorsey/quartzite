@@ -12,10 +12,8 @@
 
 ##Todo
 
-- Use [Javascript Mutation Observers](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to detect ajax content changes on facebook, github, etc… and take a new screenshot whenever these changes occur.
-- Make content_script save the length of time a page has been open in the metadata
-- Build API to access data
-- Handle refreshes so that they don't take another screenshot and add a new metadata entry to the database
+- Better error handleing
+- Handle database having no entries
 
 ##Completed
 
@@ -23,3 +21,6 @@
 - Make a unique key required to upload image to server (sent through `$_POST`)
 - Clean up code
 - Add `blocked_domains.txt` page so that domains can be blacklisted. Use same newline style as .gitignore.
+- Make content_script save the length of time a page has been open in the metadata
+- Build API to access data
+- Handle refreshes so that they don't take another screenshot and add a new metadata entry to the database
