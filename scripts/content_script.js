@@ -53,9 +53,12 @@ $("document").ready(function(){
             for(var parameter in response){
                 console.log(response[parameter]);
             }
-            //if there was a response from the ajax request and the image was saved successfully
+            //if there was a response from the ajax request and the image was saved successfully or a refresh was detected
             if(typeof response.result !== 'undefined' &&
-                response.result.toLowerCase().indexOf("image saved") != -1){
+                response.result.toLowerCase().indexOf("image saved") != -1 ||
+                typeof response.result !== 'undefined' &&
+                response.result.toLowerCase().indexOf("refresh detected") != -1
+                ){
                 
                 //get the timestamp from the result of uploadendpoint.php
                 var startIndex = response.result.indexOf(": ") + 2;
