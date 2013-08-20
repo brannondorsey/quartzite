@@ -168,7 +168,7 @@ class API {
 			$this->append_prepend($this->search, "'");
 			$query .= "WHERE $match_against_statement ORDER BY ";
 			//order by score if it is the first FULLTEXT (natural mode) search and order by likes if it is the fallback boolean mode search
-			$query .= ( $this->search_has_been_repeated ? "likes DESC " : "score DESC ");  
+			$query .= ( $this->search_has_been_repeated ? "timestamp DESC " : "score DESC ");  
 		}
 		//if search was not specified as a parameter used use LIKE
 		else{

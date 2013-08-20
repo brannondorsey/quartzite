@@ -24,9 +24,10 @@
 
 		    $previous_page = get_previous_page();
 		    
-		    //if the url is different from the last page's logged in the db...
+		    //if the database is empty or the url is different from the last page's logged in the db...
 		    //save the image and log its metadata in the db
-		    if($post_array['url'] != $previous_page['url']){
+		    if(!$previous_page ||
+		    	$post_array['url'] != $previous_page['url']){
 
 		    	//get the timestamp for the filename
 			   	$DateTime = new DateTime();

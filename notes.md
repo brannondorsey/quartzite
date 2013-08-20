@@ -13,7 +13,8 @@
 ##Todo
 
 - Better error handleing
-- Handle database having no entries
+- Re-arrange files and create a config.txt for easy server side setup
+
 
 ##Completed
 
@@ -24,3 +25,6 @@
 - Make content_script save the length of time a page has been open in the metadata
 - Build API to access data
 - Handle refreshes so that they don't take another screenshot and add a new metadata entry to the database
+- API search now working correctly
+- Handle database having no entries
+

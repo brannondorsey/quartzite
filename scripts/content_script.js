@@ -65,9 +65,6 @@ $("document").ready(function(){
                 var imageTimestamp = response.result.substring(startIndex);
                 imageTimestamp = imageTimestamp.trim();
 
-
-                console.log("The timestamp being timelogged is: " + imageTimestamp);
-                
                 //set the interval to ping the timelogendpoint.php page with
                 var interval = 1000;
                 setInterval(function(){
