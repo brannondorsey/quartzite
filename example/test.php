@@ -1,6 +1,6 @@
 <?php
 
-	 require_once("../includes/class.API.inc.php");
+	 require_once("../server/src/includes/class.API.inc.php");
 	 
 	 Database::init_connection();
 	 $api = new API();	 
@@ -20,7 +20,7 @@
 		<div class="image-container">
 			<?php foreach($results as $result){ ?>
 			<a href="<?php echo $result->url?>" target="_blank"/>
-				<img src="<?php echo Database::$root_dir_link ?>/history/images/<?php echo $result->filename; ?>" title="<?php echo $result->domain?>"/>
+				<img src="<?php echo Database::$root_dir_link ?>/server/history/images/<?php echo $result->filename; ?>" title="<?php echo $result->domain?>"/>
 			</a>
 			<?php } ?>
 		</div>

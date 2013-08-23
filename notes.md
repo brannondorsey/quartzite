@@ -13,7 +13,6 @@
 ##Todo
 
 - Better error handleing
-- Re-arrange files and create a config.txt for easy server side setup
 
 
 ##Completed
@@ -27,4 +26,5 @@
 - Handle refreshes so that they don't take another screenshot and add a new metadata entry to the database
 - API search now working correctly
 - Handle database having no entries
+- Re-arrange files ~~and create a config.txt for easy server side setup~~
 
