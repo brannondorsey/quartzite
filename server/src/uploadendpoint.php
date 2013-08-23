@@ -36,7 +36,7 @@
 			   	//decode the image and save it
 			   	$base64String = str_replace('data:image/png;base64,', '', $base64String);
 			   	$image = base64_decode($base64String);
-			   	file_put_contents("history/images/$filename.png", $image);
+			   	file_put_contents("../history/images/$filename.png", $image);
 
 				//save the metadata in the database
 				if($post_array['referrer'] == "") unset($post_array['referrer']);

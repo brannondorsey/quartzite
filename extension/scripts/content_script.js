@@ -1,9 +1,10 @@
 //------------------GLOBALS------------------//
 var endpointKey = 54183;
 var rootDirLink = "http://localhost:8888/quartzite";
-var timeLogEndpoint = rootDirLink + "/timelogendpoint.php";
-var uploadEnpoint = rootDirLink + "/uploadendpoint.php";
-var blockedUrlsEndpoint = rootDirLink + "/blockeddomains.php";
+
+var timeLogEndpoint = rootDirLink + "/server/src/timelogendpoint.php";
+var uploadEnpoint = rootDirLink + "/server/src/uploadendpoint.php";
+var blockedUrlsEndpoint = rootDirLink + "/server/src/blockeddomains.php";
 var data = {
         key: endpointKey,
         //pass the address for the ajax upload to the background page so that all addresses can be stored above

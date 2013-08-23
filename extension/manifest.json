@@ -10,7 +10,6 @@
             ],
             "js": [
                 "scripts/jquery.js",
-                "scripts/hashchange.js",
                 "scripts/content_script.js"
             ]
         }

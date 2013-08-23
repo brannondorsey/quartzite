@@ -12,7 +12,7 @@
 		   $_POST['key'] == Database::$key){
 
 			//load the file
-			$blocked_urls_raw = file("blocked_domains.txt", FILE_IGNORE_NEW_LINES);
+			$blocked_urls_raw = file("../blocked_domains.txt", FILE_IGNORE_NEW_LINES);
 
 			//trim the file contents
 			$blocked_urls = array();

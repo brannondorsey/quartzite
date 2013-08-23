@@ -1,7 +1,3 @@
-//------------------GLOBALS------------------//
-var uploadEndpoint =  "http://localhost:8888/quartzite/uploadendpoint.php"; //"http://brannondorsey.com/hidden/quartzite/uploadendpoint.php";
-
-
 //------------------EVENTS------------------//
 chrome.runtime.onMessage.addListener(
 function(request, sender, sendResponse) {

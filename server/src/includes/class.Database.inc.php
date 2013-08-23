@@ -3,11 +3,13 @@
 class Database {
 
 	public static $root_dir_link = "http://localhost:8888/quartzite";
-	public static $key = 54183; //used for quartzite ONLY
-	public static $table = "metadata";
+	public static $key = 54183;
 
-	protected static $user     = "root";
+	//MySQL database username and password
+	protected static $user = "root";
 	protected static $password = "root";
+
+	public static $table = "metadata";	
 	protected static $db       = "quartzite";
 	protected static $host     = "localhost";
 	protected static $mysqli;
