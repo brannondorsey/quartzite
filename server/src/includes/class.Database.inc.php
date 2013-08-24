@@ -6,12 +6,12 @@ class Database {
 	public static $key = 54183;
 
 	//MySQL database username and password
-	protected static $user = "root";
+	protected static $user     = "root";
 	protected static $password = "root";
-
-	public static $table = "metadata";	
-	protected static $db       = "quartzite";
-	protected static $host     = "localhost";
+  
+	public static $table    = "metadata";	
+	protected static $db    = "quartzite";
+	protected static $host  = "localhost";
 	protected static $mysqli;
 
 	//initialize the database connection
