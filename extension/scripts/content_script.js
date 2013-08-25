@@ -1,6 +1,6 @@
 //------------------GLOBALS------------------//
-var endpointKey = 54183;
 var rootDirLink = "http://localhost:8888/quartzite";
+var endpointKey = 54183;
 
 var timeLogEndpoint = rootDirLink + "/server/src/timelogendpoint.php";
 var uploadEnpoint = rootDirLink + "/server/src/uploadendpoint.php";

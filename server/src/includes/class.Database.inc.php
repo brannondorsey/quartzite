@@ -10,7 +10,7 @@ class Database {
 	protected static $password = "root";
   
 	public static $table    = "metadata";	
-	protected static $db    = "quartzite";
+	protected static $db  = "quartzite";
 	protected static $host  = "localhost";
 	protected static $mysqli;
 

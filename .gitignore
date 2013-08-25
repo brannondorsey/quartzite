@@ -1,3 +1,6 @@
 server/history/images/*
 !server/history/images/.gitignore
 ._*
+github_images/*
+.crx
+.pem
