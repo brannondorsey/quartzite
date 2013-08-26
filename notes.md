@@ -13,6 +13,7 @@
 ##Todo
 
 - Better error handleing
+- Make invalid key error message
 
 
 ##Completed

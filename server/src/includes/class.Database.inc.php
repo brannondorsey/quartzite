@@ -2,15 +2,15 @@
 
 class Database {
 
-	public static $root_dir_link = "http://localhost:8888/quartzite";
-	public static $key = 54183;
+	public static $root_dir_link = "http://yourdomain.com/subfolder";
+	public static $key = 12345;
 
-	//MySQL database username and password
-	protected static $user     = "root";
-	protected static $password = "root";
+	//MySQL database info
+	protected static $user     = "your_username";
+	protected static $password = "your_password";
+	protected static $db       = "your_database_name";
   
 	public static $table    = "metadata";	
-	protected static $db  = "quartzite";
 	protected static $host  = "localhost";
 	protected static $mysqli;
 
