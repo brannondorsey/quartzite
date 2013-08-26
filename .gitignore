@@ -4,3 +4,4 @@ server/history/images/*
 github_images/*
 .crx
 .pem
+notes.md

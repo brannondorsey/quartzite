@@ -18,7 +18,7 @@ When you open the "server" directory you should see the following files:
 
 ![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/server_folder.png)
 
-__blocked_domains.txt__ is a list of the domain names for sites that Quartzite doesn't have access to. For security reasons you may want to ban sites like "facebook.com" or "paypal.com" so that Quartzite wount log your private data. Remember that unless you setup your own password protected pages on your server the [API data](COME BACK) and screenshots will be public and anyone can access them..
+__blocked_domains.txt__ is a list of the domain names for sites that Quartzite doesn't have access to. For security reasons you may want to ban sites like "facebook.com" or "paypal.com" so that Quartzite wount log your private data. Remember that unless you setup your own password protected pages on your server the [API data](#api) and screenshots will be public and anyone can access them..
 
 __database_import.sql__ is an sql file that contains the pre-structured _quartzite_ database as well as the _metadata_ table. Use it to import the the Quartzite database onto your server using PhpMyAdmin.
 
@@ -47,7 +47,7 @@ Inside you will find the `$root_dir_link`, `$key`, `$user`, `$password`, and `$d
 
 ![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/database_class_screenshot.png)
 
-The `$root_dir_link` value should be changed to the full url of the directory (including the name) of the folder where you plan on putting your Quartzite server folder. The `$key` is a unique 5 digit passcode. Changing this value to a unique key prohibits other users from submitting images or data to your server. When [setting up the extension](COME BACK) you will use the same key that you provide here to authorize your extension permission to communicate with your server. 
+The `$root_dir_link` value should be changed to the full url of the directory (including the name) of the folder where you plan on putting your Quartzite server folder. The `$key` is a unique 5 digit passcode. Changing this value to a unique key prohibits other users from submitting images or data to your server. When [setting up the extension](#extension-setup) you will use the same key that you provide here to authorize your extension permission to communicate with your server. 
 
 Replace the `$user`, `$password`, and `$db` values with the username, password, and database name that you created with MySQL Database Wizard. Edit these variables now.
 
@@ -84,7 +84,7 @@ Before installing the Quartzite extension on Google Chrome you must personalize 
 
 ![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/content_script_screenshot.png)
 
-Change these two variables to reflect the [changes you made](COME BACK) to the `server/src/indludes/class.Database.inc.php` file earlier.
+Change these two variables to reflect the [changes you made](#edit-the-files) to the `server/src/indludes/class.Database.inc.php` file earlier.
 
 This points your Quartzite extension to the server files you just set up and allows your chrome extension access to post/retrieve data from those server files.
 
@@ -92,7 +92,7 @@ This points your Quartzite extension to the server files you just set up and all
 
 Open Google Chrome and open the Extensions page by navigating to Window -> Extensions. Click the "Load unpacked extension" button and select the extension folder (COME BACK is this the contents or the folder itself?). The loaded extension should be automatically enabled. If it isn't check the "enabled" box.
 
-The Quartzite extension should now be sending screenshots and metadata to your browser. If it isn't or you are having another problem with the setup checkout the [Troubleshooting section](COME BACK) of this reference.
+The Quartzite extension should now be sending screenshots and metadata to your browser. If it isn't or you are having another problem with the setup checkout the [Troubleshooting section](#troubleshooting) of this reference.
 
 Enjoy!
 
