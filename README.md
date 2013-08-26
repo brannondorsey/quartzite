@@ -96,6 +96,8 @@ The Quartzite extension should now be sending screenshots and metadata to your b
 
 Enjoy!
 
+##Example
+
 ##API
 
 ##Troubleshooting
