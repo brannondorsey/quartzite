@@ -241,15 +241,18 @@ Desired lookup `string`, `int`, or `float` that corresponds to the column name i
 
 __Example:__
 
-      http://yourdomain.com/subfolder/server/src/api.php?domain=wired.com&referrer=facebook.com&limit=10
+      http://yourdomain.com/subfolder/server/src/api.php?domain=wired.com&limit=10
       
-This example piggybacks off of the [example request](#example-request) used in the [Getting Started](#getting-started) section of this documentation. This request would yield more accurate results if you were looking for webpages where the domain****. The previous method would have given results where the user's name, media, tags, etc… included Richmond.
+This example piggybacks off of the [example request](#example-request) used in the [Getting Started](#getting-started) section of this documentation. This request would yield more accurate results if you were looking for webpages where the domain is wired.com. The previous method using the `search` parameter would have given any results that include wired.com somewhere in the website's metadata.
 
+If you were looking for the 10 most recent wired.com visits that came from facebook the http request would look like this:
+
+     http://yourdomain.com/subfolder/server/src/api.php?domain=wired.com&referrer=facebook.com&limit=10
 
 __Notes:__ The column parameter's are overridden if a `search` parameter is specified. 
 
 ###Search Parameter
-The `search` parameter uses a  MySQL `FULLTEXT` [Match()… Against()…](http://dev.mysql.com/doc/refman/5.5/en/fulltext-search.html#function_match) search to find the most relevant results to the searched string. This is the exact method that the search bar on the Indexd website uses. 
+The `search` parameter uses a  MySQL `FULLTEXT` [Match()… Against()…](http://dev.mysql.com/doc/refman/5.5/en/fulltext-search.html#function_match) search to find the most relevant results to the searched string. 
 
 Parameter __key:__ `search`
 
@@ -257,11 +260,11 @@ Parameter __value:__ desired query `string`
 
 __Example:__
 
-	http://api.indexd.io?search=sculpture&limit=100&key=...
+	http://yourdomain.com/subfolder/server/src/api.php?search=design
 
-__Notes:__ `search` results are automatically ordered by relevancy, or if relevancy is found to be arbitrary, by `likes`. The `order_by` parameter cannot be used when the `search` parameter is specified. More on why below…
+__Notes:__ `search` results are automatically ordered by relevancy, or if relevancy is found to be arbitrary, by `timestamp`. The `order_by` parameter cannot be used when the `search` parameter is specified. More on why below…
 
-Default Match()…Against()… MySQL statements search databases using a 50% similarity threshold. This means that if a searched string appears in more than half of the rows in the database the search will ignore it. Because it is possible that many users will have similar tags, we have built Indexd to automatically re-search `IN BOOLEAN MODE` if no results are found in the first try. If results are found in the second search they are ordered by `likes`.
+Default Match()…Against()… MySQL statements search databases using a 50% similarity threshold. This means that if a searched string appears in more than half of the rows in the database the search will ignore it. Because it is possible that webpages will have similar tags, I have built the api to automatically re-search `IN BOOLEAN MODE` if no results are found in the first try. If results are found in the second search they are ordered by `timestamp`.
 
 ###Exact Parameter
 
@@ -273,46 +276,44 @@ Parameter __values:__ `TRUE	` and `FALSE`
 
 __Example:__
 
-	http://api.indexd.io?media=design&exact=TRUE&limit=100&key=...
+	http://yourdomain.com/subfolder/server/src/api.php?length_visited=1000&exact=TRUE&limit=5
 
-This request will limit the returned results to users whose media includes __only__ design. If the `exact` parameter was not specified, or was set to `FALSE`, the same request could also return users whose media were interior design and graphic design, or users who have more media listed in addition to design. Unless you are looking for user's with only one result specific for a column it is suggested to leave `exact` set to `FALSE`.
+This request will limit the returned results to webages whose length_visited is __only__ 1 second. If the `exact` parameter was not specified, or was set to `FALSE`, the same request could also return webpages whose length_visited have a trailing 1 second (i.e. 11 seconds, 131 seconds, etc…). including `exact=true` parameter in an api http request is equivalent to a `MySQL` `LIKE` statement.
 	
 __Notes:__ `exact`'s values are case insensitive.
 
 ###Exclude Parameter
 
-The exclude parameter is used in conjunction with the column parameters to exclude one or more users from a query.
+The exclude parameter is used in conjunction with the column parameters to exclude one or more specific webpage's from a query.
 
 
 Parameter __key:__ `exclude`
 
-Parameter __values:__ a comma-delimited list of excluded user's `id`'s
+Parameter __values:__ a comma-delimited list of excluded webpage's `id`'s
 
 __Example:__
 
-	http://api.indexd.io?tags=contemporary&exclude=5,137,1489&limit=50&key=...
+	http://yourdomain.com/subfolder/server/src/api.php?domain=brannondorsey.com&exclude=5,137,1489&limit=50
 
-This example will return the first 50 users other than numbers `5`, `137`, and `1489` whose tags include contemporary 
+This example will return the first 50 users other than numbers `5`, `137`, and `1489` whose domain includes brannondorsey.com. 
 
 ###Order By Parameter
 
-This parameter is used with the column parameters to sort the returned users by the specified value. If `order_by` is not specified its value defaults to `last_name`. Order by cannot be used when the `search` parameter is specified.
+This parameter is used with the column parameters to sort the returned users by the specified value. If `order_by` is not specified its value defaults to `timestamp`. Order by cannot be used when the `search` parameter is specified.
 
 Parameter __key:__ `order_by`
 
-Parameter __value:__ Column name (i.e. `first_name`) to order by
+Parameter __value:__ Column name (i.e. `length_visited`) to order by
 
 __Example:__
 
-	http://api.indexd.io?tags=contemporary&order_by=country&limit=50&key=...
+	http://yourdomain.com/subfolder/server/src/api.php?domain=buzzfeed.com&order_by=length_visited&limit=15
 
-This request returns the first 50 users whose tags include "contemporary" ordered alphabetically by country.
-
-__Notes:__ If the value of `order_by` is an `int` or a `float` the default `flow` of `ASC` will order the results from lowest specified column value to highest specified column value. If the value of `order_by` is set to number of `likes` for instance, `flow` should be set to `DESC`.
+This request returns the 15 longest visited buzzfeed webpages.
 
 ###Flow Parameter
 
-This parameter specifies the MySQL `ASC` and `DESC` options that follow the `ORDER BY` statement. If `flow` is not specified it defaults to `ASC`.
+This parameter specifies the MySQL `ASC` and `DESC` options that follow the `ORDER BY` statement. If `flow` is not specified it defaults to `DESC`.
 
 Parameter __key:__ `flow`
 
@@ -320,9 +321,9 @@ Parameter __value:__ `ASC` or `DESC`
 
 __Example:__
 
-	http://api.indexd.io?tags=contemporary&order_by=likes&flow=DESC&key=...
+	http://yourdomain.com/subfolder/server/src/api.php?keywords=virtual%20reality&order_by=title&flow=ASC
 	
-This request specifies that the results should be ordered in a `DESC` fashion.
+This request specifies that the results should be ordered in an `ASC` fashion. It would return webpages whose keywords include "virtual reality" in a reverse alphabetical order by title.
 		
 __Notes:__ `flow`'s values are case insensitive.
 
@@ -336,9 +337,9 @@ Parameter __value:__ `int` between `1-250`
 
 __Example:__
 
-	http://api.indexd.io?city=Baltimore&limit=5&key=...
+	http://yourdomain.com/subfolder/server/src/api.php?referrer=amazon.com&limit=5
 
-Returns the first five users from Baltimore alphabetically by last name.
+Returns the 5 most recent webpages referred from amazon.com.
 
 	
 ###Page Parameter
@@ -351,11 +352,10 @@ Parameter __value:__ `int` greater than `0`
 
 __EXAMPLE:__ 
 
-	http://api.indexd.io?search=ancient%20architecture&limit=7&page=3&order_by=id&flow=desckey=...
-	
+	http://yourdomain.com/subfolder/server/src/api.php?search=zombie&limit=7&page=3&order_by=length_visited&flow=asc	
 This request will return the 3rd "page" of `search` results. 
 
-For instance, if all users had the tag "ancient architecture", setting `page=1` would return users with id's `1-7`, setting `page=2` would yield `8-14`, etc…
+For instance, in the absurd example that all webpages had "zombie" as a keyword, setting `page=1` would return webpages with id's `1-7`, setting `page=2` would yield `8-14`, etc…
 
 __Note:__ The MySQL `OFFSET` is calculated server side by multiplying the value of `limit` by the value of `page` minus one. 
 
@@ -370,7 +370,7 @@ Parameter __values:__ `	TRUE` or `FALSE`
 __EXAMPLE:__
 
      //request
-     http://api.indexd.io?media=film&count_only=true&key=...
+     http://yourdomain.com/subfolder/server/src/api.php?domain=google.com&count_only=true
      
      //returns
      {
@@ -380,15 +380,15 @@ __EXAMPLE:__
         }]
      }
      
-This request returns the number of users who have specified "film" in their media list.
+This request returns the number of webpages that have "google.com" as the domain. The count value is returned as __a `string`__.
 
 __Note:__ The value of `count_only` is case insensitive.
-
-##License and Credit
-
-The Indexd Public API is developed and maintained by [Brannon Dorsey](http://github.com/brannondorsey) and [Kevin Zweerink](http://github.com/kevinzweerink) and is published under the [MIT License](license.txt). If you notice any bugs, have any questions, or would like to help us with development please submit an issue or pull request, write about it on our wiki, or [contact us](COME BACK).
 
 
 ##Troubleshooting
 
 Permissions on server are correct?
+
+##License and Credit
+
+The Quartzite project is developed and maintained by [Brannon Dorsey](http://brannondorsey.com) and is published under the [MIT License](license.txt). If you notice any bugs, have any questions, or would like to help me with development please submit an issue or pull request, write about it on our wiki, or [contact me](mailto:brannon@brannondorsey.com).
