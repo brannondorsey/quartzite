@@ -1,6 +1,6 @@
 #Quartzite
 
-Quartzite is a Google Chrome browser extension that allows users to autolog screenshots and metadata when surfing the web. When Quartzite is enabled it saves a screenshot to your server whenever you go to a new page. It also saves information about each visit like the domain, url, and the length visited. Installing Quartzite on your server is easy, just download this repository and follow the instructions below.
+Quartzite is a Google Chrome browser extension that allows users to autolog screenshots and metadata when surfing the web. When Quartzite is enabled it saves a screenshot to your server whenever you go to a new page. It also saves information about each visit like the domain, url, and the length visited, etc... Installing Quartzite on your server is easy, just download this repository and follow the instructions below.
 
 ##Setup
 This repository is split into three folders:
@@ -90,15 +90,304 @@ This points your Quartzite extension to the server files you just set up and all
 
 ####Load and pack the extension
 
-Open Google Chrome and open the Extensions page by navigating to Window -> Extensions. Click the "Load unpacked extension" button and select the extension folder (COME BACK is this the contents or the folder itself?). The loaded extension should be automatically enabled. If it isn't check the "enabled" box.
+Open Google Chrome and open the Extensions page by navigating to Window -> Extensions. Click the "Load unpacked extension" button and select the extension folder. The loaded extension should be automatically enabled. If it isn't check the "enabled" box.
 
 The Quartzite extension should now be sending screenshots and metadata to your browser. If it isn't or you are having another problem with the setup checkout the [Troubleshooting section](#troubleshooting) of this reference.
 
 Enjoy!
 
-##Example
-
 ##API
+
+Now that you have the Quartzite extension up and running you probably want to know how you can use the data you collect with it. Included in the `server/src` folder is an `api.php` file. This file acts as a client-server [REST API](http://en.wikipedia.org/wiki/Representational_state_transfer) that returns valid `json` to describe the data in your Quartzite database. You can access this data from anywhere using `get` parameters in an http request. For example, `http://yourdomain.com/quartzite/server/src/api.php?domain=twitter.com&order_by=timestamp&limit=5` returns an array `json` objects that represent the five most recent visits to twitter.com.
+
+Using the API is easy once you learn how it works. 
+
+###<a id="getting-started"></a>Getting Started
+
+####Formatting a request
+
+The Quarzite database runs on [MySQL](https://en.wikipedia.org/wiki/MySQL) and so the http requests used to return metadata is very similar to forming a MySQL `SELECT` query statement. If you have used MySQL before, think of using the api `get` parameters as little pieces of a query. For instance, the `limit`, `order_by`, and `flow` (my nickname for MySQL `ORDER BY`'s `DESC` or `ASC`) parameters translate directly into a MySQL statement on your server.
+
+####<a id="example-request"></a>Example Request
+     http://yourdomain.com/subfolder?search=wired.com&limit=50
+     
+The above request would return the 50 newest page visits to github.
+
+####Notable Parameters
+
+- `search` uses a MySQL FULLTEXT search to find the most relevant results in the database to the parameter's value.
+- `order_by` returns results ordered by the column name given as the parameter's value.
+- `limit` specifies the number of returned results. If not included as a parameter the default value is `25`. Max value is `250`.
+- `page` uses a MySQL `OFFSET` to return the contents of a hypothetical "page" of results in the database. Used most effectively when paired with `limit`.
+
+A full list of all Quartzite api parameters are specified in the [Parameter Reference](#parameter-reference) link to the section below) section of this Documentation.
+
+
+###Returned JSON
+
+All data returned by the api is wrapped in a `json` object named `data`. If there is an error, or no results are found, an `error` object with a corresponding error message will be returned __instead__ of a `data` object. 
+
+Inside the `data` object is an array of objects that are returned as a result of the url parameters that will be outlined shortly.
+
+```json
+{
+    "data": [
+        {
+            "id": "1035",
+            "timestamp": "2013-08-27T20:57:54-0600",
+            "filename": "2013-08-27T20%3A57%3A54-0600.png",
+            "title": "JSONLint - The JSON Validator.",
+            "domain": "jsonlint.com",
+            "url": "http://jsonlint.com/",
+            "ip": "50.141.246.246",
+            "description": "JSON Lint is a web based validator and reformatter for JSON, a lightweight data-interchange format."
+        },
+        {
+            "id": "1034",
+            "timestamp": "2013-08-27T20:53:56-0600",
+            "filename": "2013-08-27T20%3A53%3A56-0600.png",
+            "title": "Amazon.com: Â The Place Beyond the Pines - 11 x 17 Movie Poster - Style A: Home &amp; Kitchen",
+            "domain": "www.amazon.com",
+            "url": "http://www.amazon.com/The-Place-Beyond-Pines-Poster/dp/B00BFXV34I",
+            "referrer": "https://www.google.com/",
+            "ip": "50.141.246.246",
+            "description": "Find the biggest selection of products from POSTERS with the lowest prices. Shop online for bedding, furniture, vacuums, decor, storage and more at Amazon.com",
+            "keywords": "Â The Place Beyond the Pines - 11 x 17 Movie Poster - Style A,INCLINE ENTERTAINMENT"
+        }
+    ]
+}```
+
+__Note:__ The `data` object always contains an array of objects even if there is only one result.
+
+The API allows you access to each webpage's:
+
+`id`, `timestamp`, `firstname`, `title`, `domain`, `url`, `length_visited`, `referrer`, `ip`, `forward_from` (if the IP Address was forwarded), `author`, `owner`, `description`, `keywords`, and `copywrite`.
+
+These webpage object properties correspond to the column names in the MySQL database. Each object contains these proprties as long as they are not empty. Because `<meta>` tags are optional often many of them are empty.
+
+##Examples
+
+Because the api outputs data using `JSON` the results of an api http request can be loaded into a project written in almost any popular language. I have chosen to provide brief code examples using `PHP`, however, these code snippets outline the basics of loading and using your Quartzite data and easily apply to another language. 
+
+###Using the Data
+
+```php
+<?php
+$month = "2013-8";
+$referrer = "google.com";
+
+$http_request = "http://yourdomain.com/subfoler/server/src/api.php?timestamp=". $month
+. "&referrer=" . $referrer;
+	
+$json_string = file_get_contents($http_request);
+$jsonObj = json_decode($json_string);
+	
+//loop through each user object inside of the "data" array
+foreach($jsonObj->data as $webpage){
+   //do something with each result inside of here...
+   //for example, print some of their info to the browser
+   echo "This webpage's domain is " . $webpage->domain . "<br/>";
+   echo "This webpage's timetamp is " . $user->timestamp . "<br/>";
+   echo "This webpage was focused for is " . $user->length_visited/1000 . "seconds";
+   echo "<br/>";
+}
+?>
+```
+
+###Error Handling
+
+Often requests to the api return no results because no webpages were found that met the request's criteria. For this reason it is important to know how to handle the the api `error`. The `JSON` that is returned in this instance is `{"error": "no results found"}`.
+
+Handling `errors` is simple. All that you need to do is check if the `error` property exists in the resulting `JSON` object. If it does execute the code for when an error is present. Otherwise, continue with the program because the request returned at least one webpage object.
+
+```php
+<?php 
+$month = "2013-8";
+$referrer = "google.com";
+
+$http_request = "http://yourdomain.com/subfoler/server/src/api.php?timestamp=". $month
+. "&referrer=" . $referrer;
+	
+$json_string = file_get_contents($http_request);
+$jsonObj = json_decode($json_string);
+	
+//check for an error
+if(isset($jsonObj->error)){
+	//code for handling the error goes in here...
+	//for example, print the error message to the browser
+	echo $jsonObj->error;
+
+}else{
+	//execute the code for when user objects are returned…
+	//for example, list the ids of the resulting users
+	foreach($jsonObj->data as $webpage){
+		echo "This webpage's url is " . $webpage->url . "<br/>";
+	}
+}
+?>
+```
+	
+##<a id="parameter-reference"></a>Parameter Reference
+
+This section documents in detail all of the api parameters currently available. 
+
+###Column Parameters
+Column parameters allow you to query any webpage's data for a specific value where the parameter key is specified to be the webpage's column in our database. Column parameters can be stacked for more specific queries.
+
+Parameter __keys:__ Column name (i.e. `domain`) to perform query on.
+
+Parameter __values:__ 
+Desired lookup `string`, `int`, or `float` that corresponds to the column name in the database as specified by the parameter's key.
+
+__Example:__
+
+      http://yourdomain.com/subfolder/server/src/api.php?domain=wired.com&referrer=facebook.com&limit=10
+      
+This example piggybacks off of the [example request](#example-request) used in the [Getting Started](#getting-started) section of this documentation. This request would yield more accurate results if you were looking for webpages where the domain****. The previous method would have given results where the user's name, media, tags, etc… included Richmond.
+
+
+__Notes:__ The column parameter's are overridden if a `search` parameter is specified. 
+
+###Search Parameter
+The `search` parameter uses a  MySQL `FULLTEXT` [Match()… Against()…](http://dev.mysql.com/doc/refman/5.5/en/fulltext-search.html#function_match) search to find the most relevant results to the searched string. This is the exact method that the search bar on the Indexd website uses. 
+
+Parameter __key:__ `search`
+
+Parameter __value:__ desired query `string`
+
+__Example:__
+
+	http://api.indexd.io?search=sculpture&limit=100&key=...
+
+__Notes:__ `search` results are automatically ordered by relevancy, or if relevancy is found to be arbitrary, by `likes`. The `order_by` parameter cannot be used when the `search` parameter is specified. More on why below…
+
+Default Match()…Against()… MySQL statements search databases using a 50% similarity threshold. This means that if a searched string appears in more than half of the rows in the database the search will ignore it. Because it is possible that many users will have similar tags, we have built Indexd to automatically re-search `IN BOOLEAN MODE` if no results are found in the first try. If results are found in the second search they are ordered by `likes`.
+
+###Exact Parameter
+
+The exact parameter is used in conjunction with the column parameters and specifies whether or not their values are queried with relative or exact accuracy. If not included in the url request the `exact` parameter defaults to `false`.
+
+Parameter __key:__ `exact`
+
+Parameter __values:__ `TRUE	` and `FALSE`
+
+__Example:__
+
+	http://api.indexd.io?media=design&exact=TRUE&limit=100&key=...
+
+This request will limit the returned results to users whose media includes __only__ design. If the `exact` parameter was not specified, or was set to `FALSE`, the same request could also return users whose media were interior design and graphic design, or users who have more media listed in addition to design. Unless you are looking for user's with only one result specific for a column it is suggested to leave `exact` set to `FALSE`.
+	
+__Notes:__ `exact`'s values are case insensitive.
+
+###Exclude Parameter
+
+The exclude parameter is used in conjunction with the column parameters to exclude one or more users from a query.
+
+
+Parameter __key:__ `exclude`
+
+Parameter __values:__ a comma-delimited list of excluded user's `id`'s
+
+__Example:__
+
+	http://api.indexd.io?tags=contemporary&exclude=5,137,1489&limit=50&key=...
+
+This example will return the first 50 users other than numbers `5`, `137`, and `1489` whose tags include contemporary 
+
+###Order By Parameter
+
+This parameter is used with the column parameters to sort the returned users by the specified value. If `order_by` is not specified its value defaults to `last_name`. Order by cannot be used when the `search` parameter is specified.
+
+Parameter __key:__ `order_by`
+
+Parameter __value:__ Column name (i.e. `first_name`) to order by
+
+__Example:__
+
+	http://api.indexd.io?tags=contemporary&order_by=country&limit=50&key=...
+
+This request returns the first 50 users whose tags include "contemporary" ordered alphabetically by country.
+
+__Notes:__ If the value of `order_by` is an `int` or a `float` the default `flow` of `ASC` will order the results from lowest specified column value to highest specified column value. If the value of `order_by` is set to number of `likes` for instance, `flow` should be set to `DESC`.
+
+###Flow Parameter
+
+This parameter specifies the MySQL `ASC` and `DESC` options that follow the `ORDER BY` statement. If `flow` is not specified it defaults to `ASC`.
+
+Parameter __key:__ `flow`
+
+Parameter __value:__ `ASC` or `DESC`
+
+__Example:__
+
+	http://api.indexd.io?tags=contemporary&order_by=likes&flow=DESC&key=...
+	
+This request specifies that the results should be ordered in a `DESC` fashion.
+		
+__Notes:__ `flow`'s values are case insensitive.
+
+###Limit Parameter
+
+The `limit` parameter works similarly to MySQL `LIMIT`. It specifies the max number of users to be returned. The default value, if unspecified is `25`. The max value of results that can be returned in one request is `250`.
+
+Parameter __key:__ `limit`
+
+Parameter __value:__ `int` between `1-250`
+
+__Example:__
+
+	http://api.indexd.io?city=Baltimore&limit=5&key=...
+
+Returns the first five users from Baltimore alphabetically by last name.
+
+	
+###Page Parameter
+
+The page parameter is used to keep track of what set (or page) of results are returned. This is similar to the [MySQL OFFSET statement](http://dev.mysql.com/doc/refman/5.0/en/select.html). If not specified the page value will default to `1`.
+
+Parameter __key:__ `page`
+
+Parameter __value:__ `int` greater than `0`
+
+__EXAMPLE:__ 
+
+	http://api.indexd.io?search=ancient%20architecture&limit=7&page=3&order_by=id&flow=desckey=...
+	
+This request will return the 3rd "page" of `search` results. 
+
+For instance, if all users had the tag "ancient architecture", setting `page=1` would return users with id's `1-7`, setting `page=2` would yield `8-14`, etc…
+
+__Note:__ The MySQL `OFFSET` is calculated server side by multiplying the value of `limit` by the value of `page` minus one. 
+
+###Count Only Parameter
+
+The `count only` parameter differs from all of the other Indexd API parameters as it __does not__ return an array of user objects. Instead, it returns a single object as the first element in the `data` array. This object has only one property, `count`, where the corresponding `int` value describes the number of results returned by the rest of the url parameters. If the `count_only` parameter is not specified the default value is `FALSE`. When `count_only` is set to `TRUE` the request will __only__ evaluate and return the number of results found by the rest of the url parameters and the request will not return any user data.
+
+Parameter __key:__ `count_only`
+
+Parameter __values:__ `	TRUE` or `FALSE`
+
+__EXAMPLE:__
+
+     //request
+     http://api.indexd.io?media=film&count_only=true&key=...
+     
+     //returns
+     {
+      "data":[
+        {
+        "count":"701"
+        }]
+     }
+     
+This request returns the number of users who have specified "film" in their media list.
+
+__Note:__ The value of `count_only` is case insensitive.
+
+##License and Credit
+
+The Indexd Public API is developed and maintained by [Brannon Dorsey](http://github.com/brannondorsey) and [Kevin Zweerink](http://github.com/kevinzweerink) and is published under the [MIT License](license.txt). If you notice any bugs, have any questions, or would like to help us with development please submit an issue or pull request, write about it on our wiki, or [contact us](COME BACK).
+
 
 ##Troubleshooting
 

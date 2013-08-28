@@ -14,6 +14,7 @@
 
 - Better error handleing
 - Make invalid key error message
+- Fix API output so that one result doesn't yield empty json parameters
 
 
 ##Completed
