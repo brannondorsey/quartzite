@@ -14,7 +14,6 @@
 
 - Better error handleing
 - Make invalid key error message
-- Fix API output so that one result doesn't yield empty json parameters
 
 
 ##Completed
@@ -29,4 +28,5 @@
 - API search now working correctly
 - Handle database having no entries
 - Re-arrange files ~~and create a config.txt for easy server side setup~~
+- Fix API output so that one result doesn't yield empty json parameters
 

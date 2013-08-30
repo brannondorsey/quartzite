@@ -155,7 +155,8 @@ Inside the `data` object is an array of objects that are returned as a result of
             "keywords": "Â The Place Beyond the Pines - 11 x 17 Movie Poster - Style A,INCLINE ENTERTAINMENT"
         }
     ]
-}```
+}
+```
 
 __Note:__ The `data` object always contains an array of objects even if there is only one result.
 

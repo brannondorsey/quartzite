@@ -103,14 +103,15 @@ class API {
 		else{
 			$user_row = $mysql_results_array;
 			$JSON_output_string .= "{";
-				$j = 0;
 				foreach($user_row as $key => $value){
-					if($key == "COUNT(*)") $key = $count_only_key;
-					$JSON_output_string .= '"' . $key . '"' . ':';
-					$JSON_output_string .= '"' . $value . '"';
-					if ($j != sizeof($user_row) -1) $JSON_output_string .= ',';
-					$j++;
+					if($value != ""){
+						if($key == "COUNT(*)") $key = $count_only_key;
+						$JSON_output_string .= '"' . $key . '"' . ':';
+						$JSON_output_string .= '"' . $value . '"';
+						$JSON_output_string .= ',';
+					}
 				}
+				$JSON_output_string = rtrim($JSON_output_string, ",");
 				$JSON_output_string .= "}";
 		}
 		return $JSON_output_string;
