@@ -3,6 +3,8 @@
 	header("Access-Control-Allow-Origin: *");
 	ini_set("memory_limit","1G");
 	
+	$upload_dir = "../history/images/";
+	if (!is_dir($upload_dir)) die("Error: \$upload_directory is not a valid directory");
 	// if there POST was set...
 	if(isset($_POST) &&
 	   !empty($_POST)){
@@ -36,7 +38,8 @@
 			   	//decode the image and save it
 			   	$base64String = str_replace('data:image/png;base64,', '', $base64String);
 			   	$image = base64_decode($base64String);
-			   	file_put_contents("../history/images/$filename.png", $image);
+			   	if (!file_put_contents("$upload_dir/$filename.png", $image)) 
+			   		die("Error saving image to \$upload_directory. Make sure that the data-www user has write permissions to this directory.");
 
 				//save the metadata in the database
 				if($post_array['referrer'] == "") unset($post_array['referrer']);
@@ -53,7 +56,7 @@
 		    }
 			Database::close_connection();
 			
-		}else echo get_error("invalid POST values");
+		} else echo get_error("invalid POST values");
 	}
 
 	function get_error($error_message){

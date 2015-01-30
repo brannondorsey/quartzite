@@ -23,7 +23,6 @@ return true;
 //------------------FUNCTIONS------------------//
 function sendImageToServer(sendResponse, request){
     //if the string length is greater than 50... send it to the endpoint
-    console.log("The title is " + request.title);
     if(request.img.length > 50){
         $.ajax({
             type: "POST",

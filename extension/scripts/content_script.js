@@ -1,6 +1,7 @@
 //------------------GLOBALS------------------//
 var rootDirLink = "http://yourdomain.com/subfolder";
 var endpointKey = 12345;
+var logToConsole = true;
 
 var timeLogEndpoint = rootDirLink + "/server/src/timelogendpoint.php";
 var uploadEnpoint = rootDirLink + "/server/src/uploadendpoint.php";
@@ -51,9 +52,7 @@ $("document").ready(function(){
         if(getPropertyFromMeta("meta[name='copywrite']")) data.copywrite = getPropertyFromMeta("meta[name='copywrite']");
 
         chrome.runtime.sendMessage(data, function(response) {
-            for(var parameter in response){
-                console.log(response[parameter]);
-            }
+          
             //if there was a response from the ajax request and the image was saved successfully or a refresh was detected
             if(typeof response.result !== 'undefined' &&
                 response.result.toLowerCase().indexOf("image saved") != -1 ||
@@ -85,10 +84,10 @@ $("document").ready(function(){
                             },
                             contentType: "application/x-www-form-urlencoded;charset=UTF-8",
                             success: function(data){
-                                console.log(data);
+                                if (logToConsole) console.log("Quartzite: " + data);
                             },
                             error: function(){
-                                console.log("Request failed");
+                                if (logToConsole) console.log("Quartzite: timeLogEndpoint Request failed");
                             }
                         });
                     }
@@ -96,7 +95,7 @@ $("document").ready(function(){
             }
         });
     }else{ //the domain was blocked
-        console.log("DOMAIN BLOCKED: Image was not saved");
+        if (logToConsole) console.log("Quartzite: Domain blocked, data not saved.");
     }
 });
 
@@ -128,7 +127,7 @@ function getBlockedUrls(){
             }else returnVal = false;
         },
         error: function(){
-            console.log("Request failed");
+            if (logToConsole) console.log("Quartzite: blockedUrlsEndpoint request failed.");
             returnVal = false;
         }
     });
