@@ -16,7 +16,7 @@ Dynamic web hosting with enabled PHP and MySQL is needed for Quartzite to work. 
 
 When you open the "server" directory you should see the following files:
 
-![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/server_folder.png)
+![Screenshot](images/server_folder.png)
 
 __blocked_domains.txt__ is a list of the domain names for sites that Quartzite doesn't have access to. For security reasons you may want to ban sites like "facebook.com" or "paypal.com" so that Quartzite wont log your private data. More information about privacy protection and the importance of using encryption with Quartzite will be covered in the [Privacy and Encryption](#Privacy-and-Encryption-with-HTTPS/SSL) section of this document.
 
@@ -32,11 +32,11 @@ Firstly, you need to create a dedicated Quartzite database on your server. If yo
 
 I recommend creating a new database using the MySQL Database Wizard. This helper app should already be installed on your server. If you are using Bluehost it is located in the Database Tools section of your cPanel. Open MySQL Database Wizard now.
 
-![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/database_wizard_1.png)
+![Screenshot](images/database_wizard_1.png)
 
 You should see a page similar to the one above. You will be prompted to create a new database using your user as a prefix. Prepend it with the desired name of your Quartzite database. I recommend using "quartzite". Be sure to remember the name of your database as you will need it later in this setup.
 
-![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/database_wizard_2.png)
+![Screenshot](images/database_wizard_2.png)
 
 Next create a user for the database (or add a user if the one you want to use already exists). Remember the username and password for this step as well.  
 
@@ -45,7 +45,7 @@ Next create a user for the database (or add a user if the one you want to use al
 Next open the `class.Database.inc.php` file inside the `src/includes` directory.
 Inside you will find the `$root_dir_link`, `$key`, `$user`, `$password`, and `$db` variables. 
 
-![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/database_class_screenshot.png)
+![Screenshot](images/database_class_screenshot.png)
 
 The `$root_dir_link` value should be changed to the full url of the directory where you plan on putting your Quartzite server folder. The `$key` variable is a unique passcode. Changing this value to a unique key prohibits other users from submitting images or data to your server. When [setting up the extension](#extension-setup) you will use the same key that you provide here to give your extension permission to communicate with your server. 
 
@@ -53,7 +53,7 @@ Replace the `$user`, `$password`, and `$db` values with the username, password, 
 
 Next open the `database_import.sql` file inside the `server` folder.
 
-![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/database_import_screenshot.png)
+![Screenshot](images/database_import_screenshot.png)
 
 Change all instances of `your_database_name` (lines 20, 22, and 23) to the name of the database you just created using MySQL Database Wizard.
  
@@ -67,7 +67,7 @@ Login to PhpMyAdmin on your server, select your Quartzite database, and then cli
 
 Now that you have edited the files and installed the database you are ready to upload the files to your server. FTP into your server now and create a new folder inside of your `public_html` (or equivalent) directory. Name this folder whatever you changed the value of the `$root_dir_link` variable inside the `class.Database.inc.php` file to. For instance, if `$root_dir_link = "https://brannondorsey.com/quartzite"` you would name the new folder "quartzite". Now drag the __entire "server" folder__ (not its contents) inside the directory you just made.
 
-![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/file_structure_on_server.png)
+![Screenshot](images/file_structure_on_server.png)
 
 The above image is a an example of how the file structure should look once uploaded to the server. 
 
@@ -84,7 +84,7 @@ You are now ready to setup and install the Quartzite browser extension on Google
 
 Before installing the Quartzite extension on Google Chrome you must personalize the "content_script.js" file located at this repository's `extension/scripts/content_script.js` path. Open that file now.
 
-![Screenshot](http://brannondorsey.com/hidden/github_images/quartzite/content_script_screenshot.png)
+![Screenshot](images/content_script_screenshot.png)
 
 Change these two variables to reflect the [changes you made](#edit-the-files) to the `server/src/includes/class.Database.inc.php` file earlier.
 
@@ -102,7 +102,7 @@ Enjoy!
 
 ## Privacy and Encryption with HTTPS/SSL
 
-Todo.
+Because 
 
 ## API
 
