@@ -1,5 +1,6 @@
 server/history/images/*
-!server/history/images/.gitignore
+!server/history/images/index.html
+!server/history/images/.gitkeep
 ._*
 github_images/*
 .crx
