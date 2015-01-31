@@ -102,11 +102,59 @@ Enjoy!
 
 ## Privacy and Encryption with HTTPS/SSL
 
-Because 
+Because Quartzite sends your personal browsing data to your web server as you surf the web, it is important to use proper encryption techniques to keep your data private. This section will walk you through installing an SSL Certificate on your server to make this possible. If you already have one installed and are using quartzite through HTTPS, or you intend to remain naive and vulnerable (seriously, if you are using Quartzite you should use SSL encryption) then you may skip this section.
+
+HTTPS/SSL employs [Public-key cryptography](http://en.wikipedia.org/wiki/Public-key_cryptography) to ensure that your data remains safe from people sniffing the network or otherwise monitoring your computer's internet traffic. Using an implementation of [OpenSSL](https://www.openssl.org/) (arguably the most popular and standardized SSL package in use) we will perform the following steps on our server:
+
+1. Generate a Private Key
+2. Generate a Certificate Signing Request (CSR)
+3. Generate a Self-signed certificate or submit CSR to Certificate Authority to receive a trusted Certificate
+
+For simplicity I am going to follow these steps via the Bluehost cPanel, however if you are running Quartzite on your own self-managed server (e.g. using a linux box at home) [here is a tutorial](https://www.madboa.com/geek/openssl/#cert-self
+) for using openSSL from the command line. For more detailed information about installing SSL on a Bluehost server see [this help page](https://my.bluehost.com/cgi/help/473).
+
+Before SSL can be setup on your Bluehost server you must ensure that you have a Dedicated IP (Non-shared). This upgrade can be purchased through Bluehost from their "Addons" page for $3.33/mo. If you choose to use a non-self-signed SSL certificate you I recommend purchasing one from Namecheap for $9.95/yr (more on that below) rather than paying the hefty $49.00/yr from Bluehost.
+
+### Generate a Prive Key
+
+From the cPanel, navigate to the SSL/TLS Manager. From there select the "Generate, view, upload, or delete your private keys" link. Now generate a 2,048 Bit key. Once this is complete return to the SSL Manager page.
+
+### Generate CSR
+
+Now follow the "Generate, view, or delete SSL certificate signing requests" link to create a Certificate Signing Request to submit to a Certificate Authority (or sign yourself as explained below). Be sure to select the key that you just created in the last step as the key to use for this CSR. Now fill out the rest of the personal data making sure to use the same data as is provided from a WHOIS query to your server (not sure what this means? Open a terminal and type `whois http://yourdomain.com`). Once this step is complete navigate back to the SSL Manager page.
+
+### Create Certificate
+
+It is at this point that you will need to choose wether or not to purchase a PositiveSSL certificate from a Certificate Authority generate your own Self-signed certificate. There are pros and cons to both but I strongly recommend purchasing a PositiveSSL certificate:
+
+#### PositiveSSL Pros
+
+- This is the only sure fire way that you can protect yourself from a man-in-the-middle attack when using Quartzite.
+- You can use this certificate for your whole domain encrypting everything else that you choose to host on your site.
+- This trusted certificate will prevent users who visit your site when using an HTTPS protocol from receiving that terrifying "You are being hacked do not proceed" red-flag page.
+
+#### PositiveSSL Cons
+
+- $9.95/yr
+- You feel slightly less like a "rogue self-signed certificate badass" by buying into the common capitalist web of trust implementation most used on the web. (p.s. the [Web of Trust](http://en.wikipedia.org/wiki/Web_of_trust) is actually a fascinating solution to a rather unique problem and is absolutely worth reading up on).
+
+If you choose to use a self-signed certificate you must SSH into your server and then follow [this tutorial](http://www.akadia.com/services/ssh_test_certificate.html) picking up on step three. Otherwise head on over to [Namecheap](https://namecheap.com), to purchase and activate a PositiveSSL certificate __making sure__ to use the CSR that you have already generated on your Bluehost site. Finally, visit the "Generate, view, upload, or delete SSL certificates" link on the SSL Manager page to upload your certificate.
+
+If you are using Bluehost and you do not have root access to your own private server you need to contact Bluehost by phone, chat, or by opening a ticket to install your uploaded certificate. Tell them you need a "High level tech to install a 3rd party SSL certificate on your server" and that you "have uploaded the necessary private key, CSR, and Certificate already".
+
+That's it. Now be safe out there guys and girls.
+
+### Final Privacy Notes
+
+A few more quick notes about privacy when using Quartzite.
+
+1. It is important to note that the default `server/history/images` folder __is publicly web accessible__. I have placed a blank index.html file in that folder so that someone who navigates to that page will not get a default directory listing of every screenshot that has been uploaded via Quartzite but there is nothing stoping someone from viewing/downloading those images if they know the exact URLs. If this is unsettling to you or if you prefer to keep these images __totally__ private I recommend changing the `$upload_dir` variable in the `server/src/uploadendpoint.php` page to a non-web-accessible folder on your server.
+
+2. By default, the Quartzite API (explained below) now requires the inclusion of the `$key` you specified in the server and extension setup instructions to be included in the URL parameters like so: `https://yourdomain.com/quartzite?key=12345`. If you are using HTTPS/SSL this parameter (and every other GET parameter included in the url) __will be__ encrypted. That said, be aware that this may be visible in or stored by your browser, so try and keep these requests and logs away from prying eyes. This privacy method is in an effort to provide some elements of security right off the bat, not to provide a 100% fool-proof method of security. If you prefer more privacy you may re-write the `server/src/api.php` file to fit your needs or remove it from your server altogether.
 
 ## API
 
-Now that you have the Quartzite extension up and running you probably want to know how you can use the data you collect with it. Included in the `server/src` folder is an `api.php` file. This file acts as a client-server [REST API](http://en.wikipedia.org/wiki/Representational_state_transfer) that returns valid `json` to describe the data in your Quartzite database. You can access this data from anywhere using `get` parameters in an http request. For example, `http://yourdomain.com/quartzite/server/src/api.php?domain=twitter.com&order_by=timestamp&limit=5` returns an array `json` objects that represent the five most recent visits to twitter.com.
+Now that you have the Quartzite extension up and running you probably want to know how you can use the data you collect with it. Included in the `server/src` folder is an `api.php` file. This file acts as a client-server [REST API](http://en.wikipedia.org/wiki/Representational_state_transfer) that returns valid `JSON` to describe the data in your Quartzite database. You can access this data from anywhere using `GET` parameters in an http request. For example, `https://yourdomain.com/quartzite/server/src/api.php?key=12345&domain=twitter.com&order_by=timestamp&limit=5` returns an array of `JSON` objects that represent the five most recent visits to twitter.com.
 
 Using the API is easy once you learn how it works. 
 
@@ -114,12 +162,12 @@ Using the API is easy once you learn how it works.
 
 #### Formatting a request
 
-The Quarzite database runs on [MySQL](https://en.wikipedia.org/wiki/MySQL) and so the http requests used to return metadata is very similar to forming a MySQL `SELECT` query statement. If you have used MySQL before, think of using the api `get` parameters as little pieces of a query. For instance, the `limit`, `order_by`, and `flow` (my nickname for MySQL `ORDER BY`'s `DESC` or `ASC`) parameters translate directly into a MySQL statement on your server.
+The Quarzite database runs on [MySQL](https://en.wikipedia.org/wiki/MySQL) and so the HTTP requests used to return metadata is very similar to forming a MySQL `SELECT` query statement. If you have used MySQL before, think of using the api `GET` parameters as little pieces of a query. For instance, the `limit`, `order_by`, and `flow` (my nickname for MySQL `ORDER BY`'s `DESC` or `ASC`) parameters translate directly into a MySQL statement on your server.
 
 #### <a id="example-request"></a>Example Request
-     http://yourdomain.com/subfolder?search=wired.com&limit=50
+     https://yourdomain.com/subfolder?key=12345&search=wired.com&limit=50
      
-The above request would return the 50 newest page visits to github.
+The above request would return the 50 newest page visits to GitHub.
 
 #### Notable Parameters
 
@@ -128,12 +176,12 @@ The above request would return the 50 newest page visits to github.
 - `limit` specifies the number of returned results. If not included as a parameter the default value is `25`. Max value is `250`.
 - `page` uses a MySQL `OFFSET` to return the contents of a hypothetical "page" of results in the database. Used most effectively when paired with `limit`.
 
-A full list of all Quartzite api parameters are specified in the [Parameter Reference](#parameter-reference) link to the section below) section of this Documentation.
+A full list of all Quartzite API parameters are specified in the [Parameter Reference](#parameter-reference) link to the section below) section of this Documentation.
 
 
 ### Returned JSON
 
-All data returned by the api is wrapped in a `json` object named `data`. If there is an error, or no results are found, an `error` object with a corresponding error message will be returned __instead__ of a `data` object. 
+All data returned by the API is wrapped in a `JSON` object named `data`. If there is an error, or no results are found, an `error` object with a corresponding error message will be returned __instead__ of a `data` object. 
 
 Inside the `data` object is an array of objects that are returned as a result of the url parameters that will be outlined shortly.
 
@@ -172,11 +220,11 @@ The API allows you access to each webpage's:
 
 `id`, `timestamp`, `firstname`, `title`, `domain`, `url`, `length_visited`, `referrer`, `ip`, `forward_from` (if the IP Address was forwarded), `author`, `owner`, `description`, `keywords`, and `copywrite`.
 
-These webpage object properties correspond to the column names in the MySQL database. Each object contains these proprties as long as they are not empty. Because `<meta>` tags are optional often many of them are empty.
+These webpage object properties correspond to the column names in the MySQL database. Each object contains these properties as long as they are not empty. Because `<meta>` tags are optional often many of them are empty.
 
 ## Examples
 
-Because the api outputs data using `JSON` the results of an api http request can be loaded into a project written in almost any popular language. I have chosen to provide brief code examples using `PHP`, however, these code snippets outline the basics of loading and using your Quartzite data and easily apply to another language. 
+Because the API outputs data using `JSON` the results of an api HTTP request can be loaded into a project written in almost any popular language. I have chosen to provide brief code examples using `PHP`, however, these code snippets outline the basics of loading and using your Quartzite data and easily apply to another language. 
 
 ### Using the Data
 
