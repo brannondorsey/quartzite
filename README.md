@@ -1,8 +1,11 @@
 # Quartzite
 
-Quartzite is a Google Chrome browser extension that allows users to auto-log their screenshots and metadata when surfing the web. When Quartzite is enabled it saves a screenshot to your server whenever you go to a new page. It also saves information about any page visit like the domain, url, and the length of time visited, etc... Installing Quartzite on your server is easy, just download this repository and follow the instructions below.
+TL;DR If the NSA has full access to your personal browsing data you should too!
+
+Quartzite is a Google Chrome browser extension that allows users to auto-log their screenshots and metadata to their own personal cloud server when surfing the web. When Quartzite is enabled it saves a screenshot to your server whenever you go to a new page. It also saves information about any page visit like the domain, url, and the length of time visited, etc... Installing Quartzite on your server is easy, just download this repository and follow the instructions below.
 
 ## Setup
+
 This repository is split into three folders:
 
 - server
@@ -233,7 +236,7 @@ Because the API outputs data using `JSON` the results of an api HTTP request can
 $month = "2013-8";
 $referrer = "google.com";
 
-$http_request = "http://yourdomain.com/subfoler/server/src/api.php?timestamp=". $month
+$http_request = "https://yourdomain.com/subfoler/server/src/api.php?timestamp=". $month
 . "&referrer=" . $referrer;
 	
 $json_string = file_get_contents($http_request);
@@ -262,7 +265,7 @@ Handling `errors` is simple. All that you need to do is check if the `error` pro
 $month = "2013-8";
 $referrer = "google.com";
 
-$http_request = "http://yourdomain.com/subfoler/server/src/api.php?timestamp=". $month
+$http_request = "https://yourdomain.com/subfoler/server/src/api.php?timestamp=". $month
 . "&referrer=" . $referrer;
 	
 $json_string = file_get_contents($http_request);
@@ -298,13 +301,13 @@ Desired lookup `string`, `int`, or `float` that corresponds to the column name i
 
 __Example:__
 
-      http://yourdomain.com/subfolder/server/src/api.php?domain=wired.com&limit=10
+      https://yourdomain.com/subfolder/server/src/api.php?domain=wired.com&limit=10
       
 This example piggybacks off of the [example request](#example-request) used in the [Getting Started](#getting-started) section of this documentation. This request would yield more accurate results if you were looking for webpages where the domain is wired.com. The previous method using the `search` parameter would have given any results that include wired.com somewhere in the website's metadata.
 
 If you were looking for the 10 most recent wired.com visits that came from facebook the http request would look like this:
 
-     http://yourdomain.com/subfolder/server/src/api.php?domain=wired.com&referrer=facebook.com&limit=10
+     https://yourdomain.com/subfolder/server/src/api.php?domain=wired.com&referrer=facebook.com&limit=10
 
 __Notes:__ The column parameter's are overridden if a `search` parameter is specified. 
 
@@ -317,7 +320,7 @@ Parameter __value:__ desired query `string`
 
 __Example:__
 
-	http://yourdomain.com/subfolder/server/src/api.php?search=design
+	https://yourdomain.com/subfolder/server/src/api.php?search=design
 
 __Notes:__ `search` results are automatically ordered by relevancy, or if relevancy is found to be arbitrary, by `timestamp`. The `order_by` parameter cannot be used when the `search` parameter is specified. More on why below…
 
@@ -333,7 +336,7 @@ Parameter __values:__ `TRUE	` and `FALSE`
 
 __Example:__
 
-	http://yourdomain.com/subfolder/server/src/api.php?length_visited=1000&exact=TRUE&limit=5
+	https://yourdomain.com/subfolder/server/src/api.php?length_visited=1000&exact=TRUE&limit=5
 
 This request will limit the returned results to webages whose length_visited is __only__ 1 second. If the `exact` parameter was not specified, or was set to `FALSE`, the same request could also return webpages whose length_visited have a trailing 1 second (i.e. 11 seconds, 131 seconds, etc…). including `exact=true` parameter in an api http request is equivalent to a `MySQL` `LIKE` statement.
 	
@@ -350,7 +353,7 @@ Parameter __values:__ a comma-delimited list of excluded webpage's `id`'s
 
 __Example:__
 
-	http://yourdomain.com/subfolder/server/src/api.php?domain=brannondorsey.com&exclude=5,137,1489&limit=50
+	https://yourdomain.com/subfolder/server/src/api.php?domain=brannondorsey.com&exclude=5,137,1489&limit=50
 
 This example will return the first 50 users other than numbers `5`, `137`, and `1489` whose domain includes brannondorsey.com. 
 
@@ -364,7 +367,7 @@ Parameter __value:__ Column name (i.e. `length_visited`) to order by
 
 __Example:__
 
-	http://yourdomain.com/subfolder/server/src/api.php?domain=buzzfeed.com&order_by=length_visited&limit=15
+	https://yourdomain.com/subfolder/server/src/api.php?domain=buzzfeed.com&order_by=length_visited&limit=15
 
 This request returns the 15 longest visited buzzfeed webpages.
 
@@ -378,7 +381,7 @@ Parameter __value:__ `ASC` or `DESC`
 
 __Example:__
 
-	http://yourdomain.com/subfolder/server/src/api.php?keywords=virtual%20reality&order_by=title&flow=ASC
+	https://yourdomain.com/subfolder/server/src/api.php?keywords=virtual%20reality&order_by=title&flow=ASC
 	
 This request specifies that the results should be ordered in an `ASC` fashion. It would return webpages whose keywords include "virtual reality" in a reverse alphabetical order by title.
 		
@@ -394,7 +397,7 @@ Parameter __value:__ `int` between `1-250`
 
 __Example:__
 
-	http://yourdomain.com/subfolder/server/src/api.php?referrer=amazon.com&limit=5
+	https://yourdomain.com/subfolder/server/src/api.php?referrer=amazon.com&limit=5
 
 Returns the 5 most recent webpages referred from amazon.com.
 
@@ -409,7 +412,7 @@ Parameter __value:__ `int` greater than `0`
 
 __EXAMPLE:__ 
 
-	http://yourdomain.com/subfolder/server/src/api.php?search=zombie&limit=7&page=3&order_by=length_visited&flow=asc	
+	https://yourdomain.com/subfolder/server/src/api.php?search=zombie&limit=7&page=3&order_by=length_visited&flow=asc	
 This request will return the 3rd "page" of `search` results. 
 
 For instance, in the absurd example that all webpages had "zombie" as a keyword, setting `page=1` would return webpages with id's `1-7`, setting `page=2` would yield `8-14`, etc…
@@ -427,7 +430,7 @@ Parameter __values:__ `	TRUE` or `FALSE`
 __EXAMPLE:__
 
      //request
-     http://yourdomain.com/subfolder/server/src/api.php?domain=google.com&count_only=true
+     https://yourdomain.com/subfolder/server/src/api.php?domain=google.com&count_only=true
      
      //returns
      {
@@ -449,3 +452,5 @@ Permissions on server are correct?
 ## License and Credit
 
 The Quartzite project is developed and maintained by [Brannon Dorsey](http://brannondorsey.com) and is published under the [MIT License](license.txt). If you notice any bugs, have any questions, or would like to help me with development please submit an issue or pull request, write about it on our wiki, or [contact me](mailto:brannon@brannondorsey.com).
+
+The Quartzite icon was taken from a Creative Commons licensed (CC BY 2.0) image uploaded to Flickr by James St. John [viewable here](https://www.flickr.com/photos/jsjgeology/14833568493). Thanks James St. John!
