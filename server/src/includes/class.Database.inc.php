@@ -3,7 +3,7 @@
 class Database {
 
 	public static $root_dir_link = "http://yourdomain.com/subfolder";
-	public static $key = 12345;
+	public static $key = 12345; // UUID or equivalent recommended for strong security
 
 	//MySQL database info
 	protected static $user     = "your_username";
@@ -17,6 +17,7 @@ class Database {
 	//initialize the database connection
 	public static function init_connection(){
 		self::$mysqli = new mysqli(self::$host, self::$user, self::$password, self::$db);
+		self::$mysqli->set_charset('utf8');
 		return is_object(self::$mysqli);
 	}
 

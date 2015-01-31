@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `your_database_name`
 --
-CREATE DATABASE IF NOT EXISTS `your_database_name` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+CREATE DATABASE IF NOT EXISTS `your_database_name` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `your_database_name`;
 
 -- --------------------------------------------------------
@@ -43,14 +43,14 @@ CREATE TABLE IF NOT EXISTS `metadata` (
   `owner` varchar(100) NOT NULL,
   `description` text NOT NULL,
   `keywords` text NOT NULL,
-  `copywrite` varchar(255) NOT NULL,
+  `copywrite` varchar(255) NOT NULL
   PRIMARY KEY (`id`),
   FULLTEXT KEY `url` (`url`),
   FULLTEXT KEY `description` (`description`),
   FULLTEXT KEY `keywords` (`keywords`),
   FULLTEXT KEY `url_2` (`url`,`description`,`keywords`),
   FULLTEXT KEY `keywords_2` (`keywords`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=801 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `metadata`
